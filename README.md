@@ -114,6 +114,44 @@ cross build --bin client --target armv7-unknown-linux-musleabihf --release
 
 ---
 
+## ☁️ 生产环境部署指南 (云端控制台)
+
+在云服务器（如 AWS, 阿里云）上部署 `Server` 端和 `Admin-Web` 端时，建议采用以下标准流程：
+
+### 1. 部署 Rust 后端 (Server)
+后端服务编译为单文件二进制，自带 SQLite 支持，无需安装其他数据库软件。
+```bash
+# 在云服务器上拉取代码并编译 Release 版
+cargo build --bin server --release
+
+# 使用 Systemd, PM2 或 Nohup 在后台长期运行
+# 推荐使用环境变量指定端口，以下为示例：
+export SOCKS5_BIND_ADDR="0.0.0.0:1080"
+export HTTP_BIND_ADDR="0.0.0.0:8081"
+export DATABASE_URL="sqlite://data.db"
+nohup ./target/release/server > server.log 2>&1 &
+```
+
+### 2. 部署 React 管理前端 (Admin-Web)
+前端必须先指定后端的 API 地址（避免跨域或 404 问题），然后再编译打包为静态产物，最后由 Nginx 或 Caddy 进行托管。
+```bash
+cd admin-web
+
+# 1. 配置环境变量 (指定后端服务器的公网 IP 或域名)
+# 修改或创建 .env.production 文件
+echo "VITE_API_BASE_URL=http://<你的服务器IP>:3000" > .env.production
+
+# 2. 安装依赖并编译前端产物
+npm install
+npm run build
+
+# 3. Nginx 部署
+# 编译完成后会生成 dist/ 目录。将 dist/ 目录复制到 Nginx 的网页根目录（如 /var/www/html/admin-web）
+# 然后在 nginx.conf 中配置静态资源代理即可。
+```
+
+---
+
 ## 📂 核心代码结构
 
 ```text
