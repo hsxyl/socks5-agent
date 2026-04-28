@@ -25,7 +25,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = ConfigArgs::parse();
     
     let client = engine::EdgeClient::new(args);
-    client.run().await?;
-
-    Ok(())
+    
+    loop {
+        if let Err(e) = client.run().await {
+            tracing::error!("Connection lost or failed to connect: {}. Retrying in 5 seconds...", e);
+        } else {
+            tracing::warn!("Disconnected normally. Retrying in 5 seconds...");
+        }
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+    }
 }
