@@ -24,7 +24,21 @@ impl EdgeClient {
         let config = Config::default();
         let connection = Connection::new(socket.compat(), config, Mode::Client);
         let mut control = connection.control();
-        let mut conn_stream = Box::pin(yamux::into_stream(connection));
+        
+        let conn_task = tokio::spawn(async move {
+            let mut conn_stream = Box::pin(yamux::into_stream(connection));
+            while let Some(stream_res) = conn_stream.next().await {
+                match stream_res {
+                    Ok(stream) => {
+                        tokio::spawn(Self::handle_proxy_stream(stream.compat()));
+                    }
+                    Err(e) => {
+                        error!("Yamux stream error: {}", e);
+                        break;
+                    }
+                }
+            }
+        });
 
         let control_stream = control.open_stream().await?;
         let mut control_stream_compat = control_stream.compat();
@@ -32,17 +46,7 @@ impl EdgeClient {
         self.register_device(&mut control_stream_compat).await?;
         self.spawn_heartbeat_task(control_stream_compat);
 
-        while let Some(stream_res) = conn_stream.next().await {
-            match stream_res {
-                Ok(stream) => {
-                    tokio::spawn(Self::handle_proxy_stream(stream.compat()));
-                }
-                Err(e) => {
-                    error!("Yamux stream error: {}", e);
-                    break;
-                }
-            }
-        }
+        let _ = conn_task.await;
 
         info!("Disconnected from server");
         Ok(())

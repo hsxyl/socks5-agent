@@ -1,0 +1,28 @@
+warning: virtual workspace defaulting to `resolver = "1"` despite one or more workspace members being on edition 2021 which implies `resolver = "2"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+note: for more details see https://doc.rust-lang.org/cargo/reference/resolver.html#resolver-versions
+   Compiling server v0.1.0 (/Users/xsb/project/gray/agent/server)
+warning: fields `username` and `password` are never read
+   --> server/src/db.rs:109:9
+    |
+107 | pub struct ProxyInfo {
+    |            --------- fields in this struct
+108 |     pub address: String,
+109 |     pub username: Option<String>,
+    |         ^^^^^^^^
+110 |     pub password: Option<String>,
+    |         ^^^^^^^^
+    |
+    = note: `ProxyInfo` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` on by default
+
+warning: `server` (bin "server") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.22s
+     Running `target/debug/server`
+[2m2026-04-28T08:22:08.572123Z[0m [32m INFO[0m [2mserver::db[0m[2m:[0m Initializing database at sqlite://data.db
+[2m2026-04-28T08:22:08.575162Z[0m [32m INFO[0m [2mserver[0m[2m:[0m Starting SOCKS5 server on 0.0.0.0:1080
+[2m2026-04-28T08:22:08.575294Z[0m [32m INFO[0m [2mserver::client_handler[0m[2m:[0m Listening for Edge Clients on 0.0.0.0:8080
+[2m2026-04-28T08:22:08.575497Z[0m [32m INFO[0m [2mserver[0m[2m:[0m Starting HTTP Admin API on 0.0.0.0:3000
+[2m2026-04-28T08:22:08.745586Z[0m [32m INFO[0m [2mserver::client_handler[0m[2m:[0m New Edge Client connected from 127.0.0.1:63550
+[2m2026-04-28T08:22:08.747097Z[0m [32m INFO[0m [2mserver::client_handler[0m[2m:[0m Device box-12345 registered

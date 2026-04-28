@@ -1,0 +1,11 @@
+warning: virtual workspace defaulting to `resolver = "1"` despite one or more workspace members being on edition 2021 which implies `resolver = "2"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+note: for more details see https://doc.rust-lang.org/cargo/reference/resolver.html#resolver-versions
+    Blocking waiting for file lock on build directory
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
+     Running `target/debug/client`
+[2m2026-04-28T08:22:08.744805Z[0m [32m INFO[0m [2mclient::engine[0m[2m:[0m Connecting to Server at 127.0.0.1:8080
+[2m2026-04-28T08:22:08.746358Z[0m [32m INFO[0m [2mclient::engine[0m[2m:[0m Connected to server
+[2m2026-04-28T08:22:08.746881Z[0m [32m INFO[0m [2mclient::engine[0m[2m:[0m Sent Register for device box-12345
+[2m2026-04-28T08:24:39.800862Z[0m [32m INFO[0m [2mclient::engine[0m[2m:[0m Disconnected from server
