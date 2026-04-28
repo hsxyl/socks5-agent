@@ -180,25 +180,25 @@ function App() {
   return (
     <div className="container">
       <header>
-        <h1>Edge Proxy - Admin Dashboard</h1>
+        <h1>边缘代理控制台 (Edge Proxy Admin)</h1>
         <div className="tabs">
           <button 
             className={`tab ${activeTab === 'clients' ? 'active' : ''}`}
             onClick={() => setActiveTab('clients')}
           >
-            Edge Clients
+            边缘节点管理
           </button>
           <button 
             className={`tab ${activeTab === 'cards' ? 'active' : ''}`}
             onClick={() => setActiveTab('cards')}
           >
-            Card Management
+            计费卡密管理
           </button>
           <button 
             className={`tab ${activeTab === 'logs' ? 'active' : ''}`}
             onClick={() => setActiveTab('logs')}
           >
-            Proxy Logs
+            代理请求日志
           </button>
         </div>
       </header>
@@ -206,27 +206,27 @@ function App() {
         {activeTab === 'clients' ? (
           <div className="card">
             <div className="card-header">
-              <h2>Edge Clients</h2>
-              <button onClick={fetchClients} className="refresh-btn">Refresh</button>
+              <h2>边缘节点列表</h2>
+              <button onClick={fetchClients} className="refresh-btn">刷新</button>
             </div>
             {loadingClients ? (
-              <p className="loading">Loading clients...</p>
+              <p className="loading">正在加载边缘节点...</p>
             ) : (
               <div className="table-responsive">
                 <table>
                   <thead>
                     <tr>
-                      <th>Device ID</th>
-                      <th>IP Address</th>
-                      <th>Status</th>
-                      <th>Uptime</th>
-                      <th>Last Heartbeat</th>
+                      <th>设备标识 (Device ID)</th>
+                      <th>公网 IP</th>
+                      <th>状态</th>
+                      <th>在线时长</th>
+                      <th>最后心跳时间</th>
                     </tr>
                   </thead>
                   <tbody>
                     {clients.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="empty">No clients found</td>
+                        <td colSpan={5} className="empty">暂无在线边缘设备</td>
                       </tr>
                     ) : (
                       clients.map(client => (
@@ -251,7 +251,7 @@ function App() {
         ) : activeTab === 'cards' ? (
           <div className="card">
             <div className="card-header">
-              <h2>Card Management</h2>
+              <h2>计费卡密管理</h2>
               <div className="generate-form">
                 <input 
                   type="number" 
@@ -259,7 +259,7 @@ function App() {
                   onChange={(e) => setBalanceGb(Number(e.target.value))}
                   min="1"
                   className="filter-input"
-                  title="Balance in GB"
+                  title="生成额度(GB)"
                 />
                 <span className="unit-label">GB</span>
                 <button 
@@ -267,26 +267,26 @@ function App() {
                   className="generate-btn"
                   disabled={generating}
                 >
-                  {generating ? 'Generating...' : 'Generate New Card'}
+                  {generating ? '生成中...' : '生成新卡密'}
                 </button>
               </div>
             </div>
             {loadingCards ? (
-              <p className="loading">Loading cards...</p>
+              <p className="loading">正在加载卡密数据...</p>
             ) : (
               <div className="table-responsive">
                 <table>
                   <thead>
                     <tr>
-                      <th>Card Key (Username)</th>
-                      <th>Remaining Balance</th>
-                      <th>Created At</th>
+                      <th>卡密 (代理用户名)</th>
+                      <th>剩余可用流量</th>
+                      <th>创建时间</th>
                     </tr>
                   </thead>
                   <tbody>
                     {cards.length === 0 ? (
                       <tr>
-                        <td colSpan={3} className="empty">No cards generated yet</td>
+                        <td colSpan={3} className="empty">暂无已生成的卡密</td>
                       </tr>
                     ) : (
                       cards.map(card => (
@@ -305,21 +305,21 @@ function App() {
         ) : (
           <div className="card">
             <div className="card-header">
-              <h2>Proxy Logs</h2>
-              <button onClick={fetchLogs} className="refresh-btn">Refresh</button>
+              <h2>代理请求日志</h2>
+              <button onClick={fetchLogs} className="refresh-btn">刷新</button>
             </div>
             
             <div className="filter-bar">
               <input 
                 type="text" 
-                placeholder="Search Target Domain/IP..." 
+                placeholder="搜索目标域名或 IP..." 
                 className="filter-input"
                 value={searchTarget}
                 onChange={e => setSearchTarget(e.target.value)}
               />
               <input 
                 type="text" 
-                placeholder="Search Card Key..." 
+                placeholder="搜索卡密..." 
                 className="filter-input"
                 value={searchCard}
                 onChange={e => setSearchCard(e.target.value)}
@@ -327,29 +327,29 @@ function App() {
             </div>
 
             {loadingLogs ? (
-              <p className="loading">Loading logs...</p>
+              <p className="loading">正在加载日志...</p>
             ) : (
               <div className="table-responsive">
                 <table>
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Card Key</th>
-                      <th>Target</th>
-                      <th>Device ID</th>
-                      <th>Protocol</th>
+                      <th>卡密</th>
+                      <th>目标地址</th>
+                      <th>承载节点 (Device ID)</th>
+                      <th>代理协议</th>
                       <th className="sortable" onClick={() => toggleSort('bytes_used')}>
-                        Traffic Used {sortBy === 'bytes_used' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                        消耗流量 {sortBy === 'bytes_used' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
                       </th>
                       <th className="sortable" onClick={() => toggleSort('created_at')}>
-                        Time {sortBy === 'created_at' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                        请求时间 {sortBy === 'created_at' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredAndSortedLogs.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="empty">No matching proxy logs found</td>
+                        <td colSpan={7} className="empty">未找到相关的代理请求日志</td>
                       </tr>
                     ) : (
                       filteredAndSortedLogs.map(log => (
@@ -357,7 +357,7 @@ function App() {
                           <td>{log.id}</td>
                           <td className="card-key" style={{fontSize: '13px'}}>{log.card_key.substring(0, 13)}...</td>
                           <td className="ip">{log.target}</td>
-                          <td className="device-id">{log.device_id || 'Fallback'}</td>
+                          <td className="device-id">{log.device_id || '内置备用IP (Fallback)'}</td>
                           <td>
                             <span className={`status-badge ${log.protocol === 'SOCKS5' ? 'socks5' : 'http'}`}>
                               {log.protocol}
