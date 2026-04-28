@@ -16,9 +16,10 @@ pub async fn listen_for_clients(session_manager: SessionManager, db_pool: Sqlite
         info!("New Edge Client connected from {}", addr);
         let session_manager = session_manager.clone();
         let db_pool = db_pool.clone();
+        let ip_address = addr.ip().to_string();
 
         tokio::spawn(async move {
-            if let Err(e) = handle_single_client(socket, addr.to_string(), session_manager, db_pool).await {
+            if let Err(e) = handle_single_client(socket, ip_address, session_manager, db_pool).await {
                 error!("Error handling client from {}: {}", addr, e);
             }
         });
