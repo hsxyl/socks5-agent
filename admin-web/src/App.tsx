@@ -26,6 +26,8 @@ interface ProxyLog {
   created_at: string;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 function App() {
   const [activeTab, setActiveTab] = useState<'clients' | 'cards' | 'logs'>('clients');
 
@@ -51,7 +53,7 @@ function App() {
 
   const fetchClients = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/clients');
+      const res = await fetch(`${API_BASE_URL}/api/clients`);
       const data = await res.json();
       setClients(data);
     } catch (e) {
@@ -63,7 +65,7 @@ function App() {
 
   const fetchCards = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/cards');
+      const res = await fetch(`${API_BASE_URL}/api/cards`);
       const data = await res.json();
       setCards(data);
     } catch (e) {
@@ -75,7 +77,7 @@ function App() {
 
   const fetchLogs = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/logs');
+      const res = await fetch(`${API_BASE_URL}/api/logs`);
       const data = await res.json();
       setLogs(data);
     } catch (e) {
@@ -89,7 +91,7 @@ function App() {
     if (balanceGb <= 0) return;
     setGenerating(true);
     try {
-      await fetch('http://localhost:3000/api/cards', {
+      await fetch(`${API_BASE_URL}/api/cards`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
